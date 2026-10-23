@@ -14,14 +14,14 @@ module.exports = async (req, res) => {
   });
 
   const crmUrl = env('CRM_LEAD_URL');
-  const crmSecret = env('CRM_LEAD_SECRET');
+  const crmSecret = env('CRM_LEAD_SECRET') || env('WEBSITE_LEAD_SECRET');
   const sheetUrl = env('SHEET_WEBHOOK_URL');
   const sheetSecret = env('SHEET_SECRET');
 
   const out = {
     crm: {
       CRM_LEAD_URL: { set: !!crmUrl, value: crmUrl || null, looks_right: /\/api\/website\/lead\/?$/.test(crmUrl) },
-      CRM_LEAD_SECRET: keyInfo(crmSecret),
+      CRM_LEAD_SECRET: { ...keyInfo(crmSecret), saved_as: env('CRM_LEAD_SECRET') ? 'CRM_LEAD_SECRET' : env('WEBSITE_LEAD_SECRET') ? 'WEBSITE_LEAD_SECRET' : null },
       reachable: null,
       accepts_key: null,
     },

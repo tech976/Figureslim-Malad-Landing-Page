@@ -11,7 +11,7 @@
 //
 // Environment variables (Vercel → Settings → Environment Variables):
 //   CRM_LEAD_URL       https://crm.figureslim.in/api/website/lead
-//   CRM_LEAD_SECRET    the CRM's WEBSITE_LEAD_SECRET
+//   CRM_LEAD_SECRET    the CRM's WEBSITE_LEAD_SECRET (may also be saved under that name)
 //   SHEET_WEBHOOK_URL  the Apps Script web app URL (ends in /exec)
 //   SHEET_SECRET       the SECRET set at the top of google-sheet.gs
 
@@ -32,7 +32,8 @@ function istStamp(d) {
 
 async function sendToCrm(lead) {
   const url = process.env.CRM_LEAD_URL;
-  const secret = process.env.CRM_LEAD_SECRET;
+  // Also accept the CRM's own name for the key, since that's what gets copied from its .env.
+  const secret = process.env.CRM_LEAD_SECRET || process.env.WEBSITE_LEAD_SECRET;
   if (!url || !secret) return { configured: false, ok: false };
 
   const u = lead.utm;
