@@ -522,7 +522,7 @@ footer b{color:#fff}
 /* ===== CONFIG: edit before going live ===== */
 const CONFIG = {
   PREVIEW: false,                // true only in the preview; leads are not sent
-  LEAD_ENDPOINT: "/api/lead",          // Vercel function; forwards to LEAD_WEBHOOK_URL
+  LEAD_ENDPOINT: "/api/lead",          // Vercel function; sends the lead to the CRM and the Google Sheet
   META_PIXEL_ID: "",                   // Figure Slim pixel ID (PageView + Lead)
   OFFER_END: "",                       // optional real end date, e.g. "2026-11-10T23:59:00+05:30"
   AUTO_POPUP_SECONDS: 15,              // 0 to disable
