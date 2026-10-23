@@ -25,15 +25,17 @@ Vercel → Settings → Environment Variables (Production):
 | `CRM_LEAD_URL` | `https://crm.figureslim.in/api/website/lead` |
 | `CRM_LEAD_SECRET` | the CRM's `WEBSITE_LEAD_SECRET` (see below) |
 | `SHEET_WEBHOOK_URL` | the Apps Script web app URL, ending in `/exec` |
-| `SHEET_SECRET` | the same value as `SECRET` in `google-sheet.gs` |
+| `SHEET_SECRET` | any random string of 24+ characters (`openssl rand -hex 24`) |
 
 Get the CRM key from the server:
 
     ssh figureslim-vps "grep '^WEBSITE_LEAD_SECRET=' /opt/figureslim-crm/.env"
 
-Google Sheet: open it → **Extensions → Apps Script** → paste `google-sheet.gs`,
-set `SECRET` → run `setup` once and allow access → **Deploy → New deployment →
+Google Sheet: open it → **Extensions → Apps Script** → paste `google-sheet.gs`
+unchanged → run `setup` once and allow access → **Deploy → New deployment →
 Web app**, Execute as **Me**, access **Anyone** → copy the `/exec` URL.
+The script saves the first `SHEET_SECRET` it receives and accepts only that key
+afterwards; run `resetKey` in the script editor if you change it.
 
 **Redeploy after changing environment variables.** Vercel only reads them at
 deploy time. Then open `/api/status` to check both connections. It never shows
