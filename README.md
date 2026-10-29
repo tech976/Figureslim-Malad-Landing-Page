@@ -48,3 +48,14 @@ Top of the `<script>` in `index.html`:
 - `META_PIXEL_ID`: Figure Slim pixel. Fires PageView, and Lead (value = offer price) on submit.
 - `OFFER_END`: optional end date; the ribbon then shows a live "Ends in…" countdown.
 - `AUTO_POPUP_SECONDS`: popup opens once per visit after this delay (and on exit intent on desktop). 0 turns it off.
+
+## Tracking and thank-you page
+
+Both pages load two Google Tag Manager containers: `GTM-WQ34WQ97` and `GTM-PS3LSMZQ`.
+
+After a successful submit the page pushes `generate_lead` to the dataLayer, waits for
+GTM to handle it (2 seconds at most), then opens **`/thank-you`** (`thank-you.html`;
+`cleanUrls` in `vercel.json` drops the `.html`). Use that URL as a conversion trigger
+if you prefer page-based tracking. The visitor's first name reaches the thank-you page
+through `sessionStorage`, never the URL, so no personal data lands in analytics.
+Clicks on the call links push `call_click` on both pages.

@@ -10,6 +10,14 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
 })(window,document,'script','dataLayer','GTM-WQ34WQ97');</script>
 <!-- End Google Tag Manager -->
+<!-- Google Tag Manager (GTM-PS3LSMZQ) -->
+<script async src="https://www.googletagmanager.com/gtm.js?id=GTM-PS3LSMZQ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+</script>
+<!-- End Google Tag Manager (GTM-PS3LSMZQ) -->
 <title>Figure Slim Malad Diwali</title>
 <meta name="description" content="Figure Slim, Malad West: non-surgical U-Lipolysis (8 sessions ₹16,000) and GLP-1 weight loss (3 months ₹33,000). Diwali offers. Book a free consultation.">
 <meta name="format-detection" content="telephone=no">
@@ -621,9 +629,19 @@ function wireForm(host){
         if (!r.ok) throw new Error("bad_status");
       }
       if (window.fbq) fbq("track","Lead",{ content_name:`${d.treatment} · Malad`, value:offer.value, currency:"INR" });
-      // GTM trigger for Google Ads / GA4 conversions. No name, phone or email: Google forbids personal data here.
-      (window.dataLayer = window.dataLayer || []).push({ event:"generate_lead", treatment:d.treatment, value:offer.value, currency:"INR", form_location:host.dataset.form });
+      // The thank-you page greets the visitor from this tab's session, not the URL, so no name reaches analytics.
+      store.set("fs_thanks", JSON.stringify({ first: lead.name.split(" ")[0], treatment: d.treatment }));
       done(lead.name.split(" ")[0], offer);
+      // Go to the thank-you page once every GTM container has handled the lead event, so the conversion
+      // is not lost to the page change. If GTM is blocked or slow, go anyway after 2 seconds.
+      let gone = false, calls = 0;
+      const go = () => { if (!gone) { gone = true; location.href = "/thank-you"; } };
+      const containers = Object.keys(window.google_tag_manager || {}).filter(k => k.startsWith("GTM-")).length;
+      // GTM trigger for Google Ads / GA4 conversions. No name, phone or email: Google forbids personal data here.
+      (window.dataLayer = window.dataLayer || []).push({ event:"generate_lead", treatment:d.treatment, value:offer.value, currency:"INR", form_location:host.dataset.form,
+        eventCallback: () => { if (++calls >= containers) go(); }, eventTimeout: 2000 });
+      if (!containers) go();
+      setTimeout(go, 2000);
     } catch(_) {
       btn.disabled = false; btn.textContent = "Claim Diwali offer"; ferr.hidden = false;
     }
